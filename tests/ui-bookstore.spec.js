@@ -7,11 +7,12 @@ const { userName, password } = require('../config/credentials');
 const BOOK_TITLE = 'Learning JavaScript Design Patterns';
 const OUTPUT_DIR = path.join(__dirname, '..', 'output');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, 'book-details.txt');
+const SCREENSHOT_DIR = path.join(__dirname, '..', 'docs', 'screenshots');
 
 test.describe('DemoQA Book Store - UI flow', () => {
 
   test('login, search book, capture details, logout', async ({ page }) => {
-
+    if (!fs.existsSync(SCREENSHOT_DIR)) fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
     
     await page.goto('https://demoqa.com/');
 
@@ -34,18 +35,23 @@ test.describe('DemoQA Book Store - UI flow', () => {
     const logoutButton = page.getByRole('button', { name: /log\s?out/i });
     await expect(logoutButton).toBeVisible();
 
+    await page.screenshot({ path: path.join(SCREENSHOT_DIR, '01-login-success.png') });
     
     await page.getByRole('button', { name: 'Go To Book Store' }).click();
     await expect(page).toHaveURL(/.*\/books/);
 
     
     await page.locator('#searchBox').fill(BOOK_TITLE);
+
     
     const bookRow = page.getByRole('row', { name: new RegExp(BOOK_TITLE) });
     await expect(bookRow).toBeVisible();
 
     
     await expect(bookRow).toContainText(BOOK_TITLE);
+
+
+    await page.screenshot({ path: path.join(SCREENSHOT_DIR, '02-book-search-result.png') });
 
     const cells = await bookRow.getByRole('cell').allTextContents();
     const cleanCells = cells.map(c => c.trim()).filter(c => c.length > 0);
@@ -70,6 +76,8 @@ test.describe('DemoQA Book Store - UI flow', () => {
     await page.getByRole('button', { name: /log\s?out/i }).click();
 
     await expect(page).toHaveURL(/.*\/login/);
+
+    await page.screenshot({ path: path.join(SCREENSHOT_DIR, '03-logout-success.png') });
   });
 
 });
