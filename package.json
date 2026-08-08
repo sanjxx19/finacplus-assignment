@@ -1,0 +1,15 @@
+{
+  "name": "demoqa-automation",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test tests/ui-bookstore.spec.js",
+    "test:api": "playwright test tests/api-reqres.spec.js",
+    "test:headed": "playwright test tests/ui-bookstore.spec.js --headed"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.0",
+    "dotenv": "^17.4.2"
+  }
+}
