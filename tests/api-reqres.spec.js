@@ -3,6 +3,14 @@ const { test, expect } = require('@playwright/test');
 const BASE_URL = 'https://reqres.in/api';
 const API_KEY = process.env.REQRES_API_KEY;
 
+test.beforeAll(() => {
+  if (!API_KEY) {
+    throw new Error('REQRES_API_KEY is not set. Check your .env file.');
+  }
+});
+
+
+
 test.describe('reqres.in - User CRUD API flow', () => {
 
   let createdUserId;
